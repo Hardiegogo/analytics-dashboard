@@ -51,6 +51,7 @@ const DateRangePickerComponent = () => {
             return null;
           } else setState([item.selection]);
         }}
+        //
         showSelectionPreview={true}
         moveRangeOnFirstSelection={false}
         months={2}

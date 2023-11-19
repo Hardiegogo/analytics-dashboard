@@ -5,11 +5,13 @@ import { useRouter } from "next/router";
 import { useParams, useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
 import { selectedCategoryState } from "@/state/selectedCategoryAtom";
+import { userState } from "@/state/userAtom";
 
 function Sidebar() {
   const setDataFilters = useSetRecoilState(dataFiltersState);
   const dataFilters = useRecoilValue(dataFiltersState);
   const router = useRouter();
+  const setUser=useSetRecoilState(userState)
   const setSelectedCategory=useSetRecoilState(selectedCategoryState)
 
   const handleGenderChange = (gender: "Male" | "Female" | "All") => {
@@ -133,6 +135,19 @@ function Sidebar() {
           }}
         >
           Reset filters
+        </button>
+        <button
+          className="p-2 rounded-md bg-white text-black"
+          onClick={()=>{
+            Cookies.remove("Auth")
+            setUser({
+              isLoggedIn:false
+            })
+            router.push('/')
+          }
+          }
+        >
+          Logout
         </button>
       </div>
     </div>

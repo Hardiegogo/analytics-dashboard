@@ -2,6 +2,7 @@ import { userState } from "@/state/userAtom";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useSetRecoilState } from "recoil";
+import Cookies from "js-cookie";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -14,6 +15,7 @@ const LoginPage = () => {
       setUser({
         isLoggedIn: true,
       });
+      Cookies.set("Auth","logged-in")
       router.replace('/dashboard')
     }
   };

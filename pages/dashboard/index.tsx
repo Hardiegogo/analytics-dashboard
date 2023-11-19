@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { DateRangePicker } from "react-date-range";
 import { LineChart } from "recharts";
+import Cookies from "js-cookie";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 interface IDataRow {
@@ -27,8 +28,8 @@ interface IDataRow {
 const Dashboard = () => {
   const [chartData, setChartData] = useRecoilState(dataState);
   const dataFilters = useRecoilValue(dataFiltersState);
-  const userStatus=useRecoilValue(userState)
-  const router=useRouter()
+  const userStatus = useRecoilValue(userState);
+  const router = useRouter();
   useEffect(() => {
     (async () => {
       const res = await axios("/api/dashboard");
@@ -36,24 +37,25 @@ const Dashboard = () => {
     })();
   }, []);
 
-  useEffect(()=>{
-    if(!userStatus.isLoggedIn){
-      router.replace("/login")
+  useEffect(() => {
+    const authCookie = Cookies.get("Auth");
+    if (authCookie !== "logged-in") {
+      router.replace("/login");
     }
-  },[userStatus.isLoggedIn])
+  }, [userStatus.isLoggedIn]);
 
   return (
-    userStatus.isLoggedIn ? <div className="flex">
-    <Sidebar />
-    <main>
-      <h1 className="text-center text-2xl mt-4">Dashboard</h1>
-      <div className="w-fit">
-        {chartData?.length && <HBarChart />}
-        <LineChartComponent />
-      </div>
-      {dataFilters.isDateRange && <DateRangePickerComponent />}
-    </main>
-  </div> : <div>Loading ...</div>
+    <div className="flex">
+      <Sidebar />
+      <main>
+        <h1 className="text-center text-2xl mt-4">Dashboard</h1>
+        <div className="w-fit">
+          {chartData?.length && <HBarChart />}
+          <LineChartComponent />
+        </div>
+        {dataFilters.isDateRange && <DateRangePickerComponent />}
+      </main>
+    </div>
   );
 };
 
